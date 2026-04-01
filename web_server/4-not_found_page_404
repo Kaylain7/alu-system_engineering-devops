@@ -1,21 +1,38 @@
 #!/usr/bin/env bash
-# Configures Nginx with a custom 404 page containing "Ceci n'est pas une page"
+# Configures Nginx with a custom 404 page and 301 redirect on /redirect_me
 apt-get update -y
 apt-get install -y nginx
 
+# Set default index page
 echo "Holberton School for the win!" > /var/www/html/index.html
 
 # Create custom 404 page
 echo "Ceci n'est pas une page" > /var/www/html/404.html
 
-# Add redirect rule and 404 page config
-sed -i '/server_name _;/a \\n\tlocation /redirect_me {\n\t\treturn 301 https://www.youtube.com/watch?v=QH2-TGUlwu4;\n\t}' /etc/nginx/sites-enabled/default
+# Write Nginx config directly
+cat > /etc/nginx/sites-enabled/default << 'EOF'
+server {
+    listen 80 default_server;
+    listen [::]:80 default_server;
 
-# Add custom 404 error page
-sed -i '/server_name _;/a \\n\terror_page 404 /404.html;' /etc/nginx/sites-enabled/default
+    root /var/www/html;
+    index index.html index.htm;
+
+    server_name _;
+
+    location / {
+        try_files $uri $uri/ =404;
+    }
+
+    location /redirect_me {
+        return 301 https://www.youtube.com/watch?v=QH2-TGUlwu4;
+    }
+
+    error_page 404 /404.html;
+    location = /404.html {
+        internal;
+    }
+}
+EOF
 
 service nginx restart
-~                                                                               
-~                                                                               
-~                                                                               
-~                                    
