@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+!/usr/bin/env bash
 # Installs and configures HAproxy to load balance between web-01 and web-02
 apt-get update -y
 apt-get install -y haproxy
