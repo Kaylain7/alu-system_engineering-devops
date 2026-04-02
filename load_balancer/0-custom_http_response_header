@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+# Configures Nginx with a custom X-Served-By header containing the server hostname
+apt-get update -y
+apt-get install -y nginx
+
+rm -f /var/www/html/index.html
+rm -f /var/www/html/index.nginx-debian.html
+echo "Holberton School for the win!" > /var/www/html/index.html
+chmod 644 /var/www/html/index.html
+
+HOSTNAME=$(hostname)
+
+printf "server {\n\tlisten 80 default_server;\n\tlisten [::]:80 default_server;\n\n\troot /var/www/html;\n\tindex index.html index.htm;\n\n\tserver_name _;\n\n\tadd_header X-Served-By %s;\n\n\tlocation /redirect_me {\n\t\treturn 301 https://www.youtube.com/watch?v=QH2-TGUlwu4;\n\t}\n\n\terror_page 404 /404.html;\n\tlocation = /404.html {\n\t\tinternal;\n\t}\n\n\tlocation / {\n\t\ttry_files \$uri \$uri/ =404;\n\t}\n}\n" "$HOSTNAME" > /etc/nginx/sites-available/default
+
+echo "Ceci n'est pas une page" > /var/www/html/404.html
+
+ln -sf /etc/nginx/sites-available/default /etc/nginx/sites-enabled/default
+
