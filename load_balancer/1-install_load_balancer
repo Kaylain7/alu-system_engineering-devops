@@ -33,4 +33,3 @@ EOF
 sed -i 's/^ENABLED=.*/ENABLED=1/' /etc/default/haproxy
 haproxy -c -f /etc/haproxy/haproxy.cfg
 service haproxy restart
-~                                                     

@@ -12,7 +12,6 @@ echo "Ceci n'est pas une page" > /var/www/html/404.html
 cat > /etc/nginx/sites-available/default <<'EOF'
 server {
     listen 80 default_server;
-    listen [::]:80 default_server;
     root /var/www/html;
     index index.html index.htm;
     server_name _;
@@ -37,4 +36,3 @@ EOF
 ln -sf /etc/nginx/sites-available/default /etc/nginx/sites-enabled/default
 nginx -t
 service nginx restart
-~                                  
